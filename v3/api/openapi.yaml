@@ -1,0 +1,1232 @@
+openapi: 3.0.3
+info:
+  contact:
+    name: 开放平台文档中心
+    url: https://openhome.alipay.com/developmentDocument.htm
+  description: 支付宝开放平台v3协议文档
+  title: 支付宝开放平台API
+  version: "1.0"
+servers:
+- description: Production server
+  url: https://openapi.alipay.com
+- description: Development server
+  url: http://openapi.stable.dl.alipaydev.com
+paths:
+  /v3/alipay/open/file/upload:
+    post:
+      description: |-
+        支付宝通用文件上传接口，支付宝开发者可以调用此接口上传文件，文件可以提供给其他业务使用，例如：上传素材（视频/图片），素材可以供给到生活号+/小程序等其他开放应用后正式发布。
+        该接口支持使用支付宝SDK和HTTP POST请求，两种方式示例如下：
+        1. 使用支付宝SDK时，可以直接使用FileItem上传，代码片段参考下文
+        2. 使用直接使用http协议时，需要忽略file_content参数，文件放入表单中，其余参数放入URL中，其中将参数（不包括文件和file_content）按<a href="https://opendocs.alipay.com/common/02kf5q#%E8%87%AA%E8%A1%8C%E5%AE%9E%E7%8E%B0%E7%AD%BE%E5%90%8D">自行实现签名</a>文档实现，示例：
+        curl --request POST 'http://openapi.alipay.com/gateway.do?charset=GBK&biz_content=%7B%22biz_code%22%3A%22content_creation%22%2C%22extra_parameters%22%3A%7B%22extern_upload%22%3A%22youku%22%2C%22alipay_user_id%22%3A%22xxxx%22%7D%7D&method=alipay.open.file.upload&format=json&sign=xxx&app_id=2014060600164699&version=1.0&sign_type=RSA2&timestamp=xxx'  --form 'file=@"xx.mp4"'
+      operationId: alipay.open.file.upload
+      parameters:
+      - allowEmptyValue: true
+        description: 页面跳转地址
+        explode: true
+        in: query
+        name: return_url
+        required: false
+        schema:
+          type: string
+        style: form
+      - allowEmptyValue: true
+        description: 通知地址
+        explode: true
+        in: query
+        name: notify_url
+        required: false
+        schema:
+          type: string
+        style: form
+      requestBody:
+        content:
+          multipart/form-data:
+            encoding:
+              file_content:
+                contentType: '*/*'
+                style: form
+              data:
+                contentType: application/json
+                style: form
+            schema:
+              $ref: '#/components/schemas/alipay_open_file_upload_request'
+        required: false
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlipayOpenFileUploadResponseModel'
+          description: common response
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/alipay_open_file_upload_default_response'
+          description: 请求失败
+      summary: 支付宝文件上传接口
+      tags:
+      - alipay.open.file
+      x-content-type: multipart/form-data
+      x-accepts: application/json
+  /v3/alipay/open/operation/openbizmock/closelyrzone/query:
+    get:
+      description: 测试路由转发closelyrzone
+      operationId: alipay.open.operation.openbizmock.closelyrzone.query
+      parameters:
+      - description: 测试人员测试
+        explode: true
+        in: query
+        name: a
+        required: true
+        schema:
+          example: a
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlipayOpenOperationOpenbizmockCloselyrzoneQueryResponseModel'
+          description: common response
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/alipay_open_operation_openbizmock_closelyrzone_query_default_response'
+          description: 请求失败
+      summary: 测试路由转发closelyrzone
+      tags:
+      - operation
+      x-accepts: application/json
+  /v3/alipay/open/operation/openbizmock/encrydata/query:
+    post:
+      description: 测试专用_此接口类型为强制加密接口
+      operationId: alipay.open.operation.openbizmock.encrydata.query
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlipayOpenOperationOpenbizmockEncrydataQueryModel'
+        required: false
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlipayOpenOperationOpenbizmockEncrydataQueryResponseModel'
+          description: common response
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/alipay_open_operation_openbizmock_encrydata_query_default_response'
+          description: 请求失败
+      summary: 测试专用_此接口类型为强制加密接口
+      tags:
+      - operation
+      x-content-type: application/json
+      x-accepts: application/json
+  /v3/alipay/open/operation/openbizmock/gzone/query:
+    get:
+      description: V3网关测试gzone转发
+      operationId: alipay.open.operation.openbizmock.gzone.query
+      parameters:
+      - description: 测试
+        explode: true
+        in: query
+        name: a
+        required: true
+        schema:
+          example: a
+          type: string
+        style: form
+      - description: 测试
+        explode: true
+        in: query
+        name: a_openid
+        required: true
+        schema:
+          example: 074a1CcTG1LelxKe4xQC0zgNdId0nxi95b5lsNpazWYoCo5
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlipayOpenOperationOpenbizmockGzoneQueryResponseModel'
+          description: common response
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/alipay_open_operation_openbizmock_gzone_query_default_response'
+          description: 请求失败
+      summary: V3网关测试gzone转发
+      tags:
+      - operation
+      x-accepts: application/json
+  /v3/alipay/open/operation/openbizmock/openidtesting/query:
+    post:
+      description: openid升级功能测试
+      operationId: alipay.open.operation.openbizmock.openidtesting.query
+      parameters:
+      - description: uid
+        explode: true
+        in: query
+        name: user_id
+        required: true
+        schema:
+          example: 2088xx
+          type: string
+        style: form
+      - description: uid
+        explode: true
+        in: query
+        name: open_id
+        required: true
+        schema:
+          example: 074a1CcTG1LelxKe4xQC0zgNdId0nxi95b5lsNpazWYoCo5
+          type: string
+        style: form
+      - description: 测试循环嵌套含有json数组和对象
+        explode: true
+        in: query
+        name: test_json
+        required: false
+        schema:
+          example: "{}"
+          type: string
+        style: form
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlipayOpenOperationOpenbizmockOpenidtestingQueryModel'
+        required: false
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlipayOpenOperationOpenbizmockOpenidtestingQueryResponseModel'
+          description: common response
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/alipay_open_operation_openbizmock_openidtesting_query_default_response'
+          description: 请求失败
+      summary: 网关测试接口openid升级测试
+      tags:
+      - operation
+      x-content-type: application/json
+      x-accepts: application/json
+  /v3/alipay/open/operation/openbizmock/rzone/query:
+    get:
+      description: 测试openapi路由rzone_uid的规则
+      operationId: alipay.open.operation.openbizmock.rzone.query
+      parameters:
+      - description: 测试专用
+        explode: true
+        in: query
+        name: uid
+        required: true
+        schema:
+          example: "2088003194644606"
+          type: string
+        style: form
+      - description: 测试专用
+        explode: true
+        in: query
+        name: lalala_openid
+        required: true
+        schema:
+          example: xxxxxscddcd
+          type: string
+        style: form
+      - description: 测试专用
+        explode: true
+        in: query
+        name: test_json
+        required: false
+        schema:
+          example: "{\"name\":\"test_id\",\"buyer_id\":\"2088003194644606\",\"bbb\"\
+            :{\"seller_id\":\"2088003194644670\",\"name\":\"zhenchen\"},\"ccc\":\"\
+            {\\\"name\\\": \\\"maise\\\", \\\"cid\\\": \\\"2088003194644699\\\"}\"\
+            }"
+          type: string
+        style: form
+      - description: 测试专用
+        explode: true
+        in: query
+        name: test_json_openid
+        required: false
+        schema:
+          example: "{}"
+          type: string
+        style: form
+      - description: 测试
+        explode: true
+        in: query
+        name: hahaha
+        required: false
+        schema:
+          example: "20883245"
+          type: string
+        style: form
+      - description: 测试
+        explode: true
+        in: query
+        name: hahaha_openid
+        required: false
+        schema:
+          example: "{}"
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlipayOpenOperationOpenbizmockRzoneQueryResponseModel'
+          description: common response
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/alipay_open_operation_openbizmock_rzone_query_default_response'
+          description: 请求失败
+      summary: 测试openapi路由
+      tags:
+      - operation
+      x-accepts: application/json
+  /v3/alipay/open/operation/openbizmock/rzonegroovy/query:
+    post:
+      description: 测试路由转发groovy脚本
+      operationId: alipay.open.operation.openbizmock.rzonegroovy.query
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlipayOpenOperationOpenbizmockRzonegroovyQueryModel'
+        required: false
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlipayOpenOperationOpenbizmockRzonegroovyQueryResponseModel'
+          description: common response
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/alipay_open_operation_openbizmock_rzonegroovy_query_default_response'
+          description: 请求失败
+      summary: 测试路由转发groovy脚本
+      tags:
+      - operation
+      x-content-type: application/json
+      x-accepts: application/json
+  /v3/alipay/open/operation/openbizmock/testcertificate/query:
+    get:
+      description: 测试专用此接口为强制走证书的接口
+      operationId: alipay.open.operation.openbizmock.testcertificate.query
+      parameters:
+      - description: ceshi
+        explode: true
+        in: query
+        name: keykey
+        required: true
+        schema:
+          example: hahahaha
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlipayOpenOperationOpenbizmockTestcertificateQueryResponseModel'
+          description: common response
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/alipay_open_operation_openbizmock_testcertificate_query_default_response'
+          description: 请求失败
+      summary: 测试专用此接口为强制走证书的接口
+      tags:
+      - operation
+      x-accepts: application/json
+  /v3/alipay/open/operation/openbizmock/testerrorcode/query:
+    get:
+      description: 测试错误码验证接口
+      operationId: alipay.open.operation.openbizmock.testerrorcode.query
+      parameters:
+      - description: 测试
+        explode: true
+        in: query
+        name: key
+        required: true
+        schema:
+          example: exist_error
+          type: string
+        style: form
+      - description: 测试
+        explode: true
+        in: query
+        name: keykey
+        required: true
+        schema:
+          example: no_exist_error
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlipayOpenOperationOpenbizmockTesterrorcodeQueryResponseModel'
+          description: common response
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/alipay_open_operation_openbizmock_testerrorcode_query_default_response'
+          description: 请求失败
+      summary: 测试错误码验证接口
+      tags:
+      - operation
+      x-accepts: application/json
+  /v3/alipay/open/operation/openbizmock/testpathkey/query/{keykey}/{a}:
+    post:
+      description: 测试网关协议3.0key和path
+      operationId: alipay.open.operation.openbizmock.testpathkey.query
+      parameters:
+      - description: ceshi
+        explode: false
+        in: path
+        name: keykey
+        required: true
+        schema:
+          example: keykey
+          type: string
+        style: simple
+      - description: 测试
+        explode: false
+        in: path
+        name: a
+        required: true
+        schema:
+          example: a
+          type: string
+        style: simple
+      - description: ceshi
+        explode: true
+        in: query
+        name: b
+        required: false
+        schema:
+          example: b
+          type: string
+        style: form
+      - description: 测试
+        explode: true
+        in: query
+        name: c
+        required: true
+        schema:
+          example: c
+          type: string
+        style: form
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlipayOpenOperationOpenbizmockTestpathkeyQueryModel'
+        required: false
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlipayOpenOperationOpenbizmockTestpathkeyQueryResponseModel'
+          description: common response
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/alipay_open_operation_openbizmock_testpathkey_query_default_response'
+          description: 请求失败
+      summary: 测试网关协议3.0key和path
+      tags:
+      - operation
+      x-content-type: application/json
+      x-accepts: application/json
+components:
+  parameters:
+    AuthToken:
+      allowEmptyValue: true
+      description: 用户授权令牌
+      explode: true
+      in: query
+      name: auth_token
+      required: false
+      schema:
+        type: string
+      style: form
+    NotifyUrl:
+      allowEmptyValue: true
+      description: 通知地址
+      explode: true
+      in: query
+      name: notify_url
+      required: false
+      schema:
+        type: string
+      style: form
+    ReturnUrl:
+      allowEmptyValue: true
+      description: 页面跳转地址
+      explode: true
+      in: query
+      name: return_url
+      required: false
+      schema:
+        type: string
+      style: form
+  schemas:
+    AgreementParams:
+      example:
+        deduct_permission: "2021571176714791277815457854545"
+        agreement_no: "20170322450983769228"
+        apply_token: MDEDUCT0068292ca377d1d44b65fa24ec9cd89132f
+        auth_confirm_no: "423979"
+      properties:
+        agreement_no:
+          description: 支付宝系统中用以唯一标识用户签约记录的编号（用户签约成功后的协议号 ）
+          example: "20170322450983769228"
+          type: string
+        apply_token:
+          description: 鉴权申请token，其格式和内容，由支付宝定义。在需要做支付鉴权校验时，该参数不能为空。
+          example: MDEDUCT0068292ca377d1d44b65fa24ec9cd89132f
+          type: string
+        auth_confirm_no:
+          description: 鉴权确认码，在需要做支付鉴权校验时，该参数不能为空
+          example: "423979"
+          type: string
+        deduct_permission:
+          description: 商户代扣扣款许可
+          example: "2021571176714791277815457854545"
+          type: string
+      type: object
+    AlipayOpenOperationOpenbizmockCloselyrzoneQueryErrorResponseModel:
+      properties:
+        code:
+          description: 错误码
+          enum:
+          - SYSTEM_ERROR
+          type: string
+        links:
+          description: 解决方案链接
+          type: string
+        message:
+          description: 错误描述
+          type: string
+      required:
+      - code
+      - message
+      type: object
+    AlipayOpenOperationOpenbizmockCloselyrzoneQueryResponseModel:
+      example:
+        result: 啦啦啦
+      properties:
+        result:
+          description: 测试人员测试时需要
+          example: 啦啦啦
+          type: string
+      required:
+      - result
+      type: object
+    AlipayOpenOperationOpenbizmockEncrydataQueryErrorResponseModel:
+      properties:
+        code:
+          description: 错误码
+          enum:
+          - LALALA
+          type: string
+        links:
+          description: 解决方案链接
+          type: string
+        message:
+          description: 错误描述
+          type: string
+      required:
+      - code
+      - message
+      type: object
+    AlipayOpenOperationOpenbizmockEncrydataQueryModel:
+      example:
+        biz_no: "1"
+      properties:
+        biz_no:
+          description: 测试
+          example: "1"
+          type: string
+      required:
+      - biz_no
+      type: object
+    AlipayOpenOperationOpenbizmockEncrydataQueryResponseModel:
+      example:
+        result: encry_sucsess
+      properties:
+        result:
+          description: 测试
+          example: encry_sucsess
+          type: string
+      type: object
+    AlipayOpenOperationOpenbizmockGzoneQueryErrorResponseModel:
+      properties:
+        code:
+          description: 错误码
+          enum:
+          - UNKNOW_ERROR
+          type: string
+        links:
+          description: 解决方案链接
+          type: string
+        message:
+          description: 错误描述
+          type: string
+      required:
+      - code
+      - message
+      type: object
+    AlipayOpenOperationOpenbizmockGzoneQueryResponseModel:
+      example:
+        result: "1"
+        zone_name: aaaa
+      properties:
+        result:
+          description: "1"
+          example: "1"
+          type: string
+        zone_name:
+          description: ceshi
+          example: aaaa
+          type: string
+      required:
+      - result
+      - zone_name
+      type: object
+    AlipayOpenOperationOpenbizmockOpenidtestingQueryErrorResponseModel:
+      properties:
+        code:
+          description: 错误码
+          enum:
+          - LALALALALALA
+          type: string
+        links:
+          description: 解决方案链接
+          type: string
+        message:
+          description: 错误描述
+          type: string
+      required:
+      - code
+      - message
+      type: object
+    AlipayOpenOperationOpenbizmockOpenidtestingQueryModel:
+      example:
+        test:
+          uid: "2088502241306951"
+          uid_list: "[\"2088502241306951\"]"
+          openid: 074a1CcTG1LelxKe4xQC0zgNdId0nxi95b5lsNpazWYoCo5
+          json_string: "{}"
+          open_id_list: "[\"074a1CcTG1LelxKe4xQC0zgNdId0nxi95b5lsNpazWYoCo5\"]"
+        user_detail:
+          amount: 0.8008281904610115
+          address: address
+          price: price
+          mobile: mobile
+          name: name
+          is_master_user: true
+          gmt_sign_up: gmt_sign_up
+        extra_json: "{}"
+        extra_json_1: "{}"
+        test_wrong: "1"
+      properties:
+        extra_json:
+          description: adadsad
+          example: "{}"
+          type: string
+        extra_json_1:
+          description: xxx
+          example: "{}"
+          type: string
+        test:
+          $ref: '#/components/schemas/OpenidComplex'
+        test_wrong:
+          description: "1"
+          example: "1"
+          type: string
+        user_detail:
+          $ref: '#/components/schemas/UserDetail'
+      type: object
+    AlipayOpenOperationOpenbizmockOpenidtestingQueryResponseModel:
+      example:
+        result_test_wrong: "1"
+        result_user_id_original: "2"
+        result_extra_json_original: "1"
+        result_extra_json_one: ceshi
+        result_test_json_original: "1"
+        result_test: "1"
+        result_user_id_openid: 074a1CcTG1LelxKe4xQC0zgNdId0nxi95b5lsNpazWYoCo5
+        result_user_detail:
+          amount: 0.8008281904610115
+          address: address
+          price: price
+          mobile: mobile
+          name: name
+          is_master_user: true
+          gmt_sign_up: gmt_sign_up
+        result_extra_json: "{}"
+        result_extra_json_one_original: "1"
+        result_user_detail_original: "4"
+        result_test_json: "{}"
+        result_test_original: "1"
+        result_test_wrong_original: "5"
+        result_user_id: "1"
+      properties:
+        result_extra_json:
+          description: "1"
+          example: "{}"
+          type: string
+        result_extra_json_one:
+          description: "1"
+          example: ceshi
+          type: string
+        result_extra_json_one_original:
+          description: ceshi
+          example: "1"
+          type: string
+        result_extra_json_original:
+          description: "1"
+          example: "1"
+          type: string
+        result_test:
+          description: "1"
+          example: "1"
+          type: string
+        result_test_json:
+          description: ceshi
+          example: "{}"
+          type: string
+        result_test_json_original:
+          description: "2"
+          example: "1"
+          type: string
+        result_test_original:
+          description: "1"
+          example: "1"
+          type: string
+        result_test_wrong:
+          description: ceshi
+          example: "1"
+          type: string
+        result_test_wrong_original:
+          description: ceshi
+          example: "5"
+          type: string
+        result_user_detail:
+          $ref: '#/components/schemas/UserDetail'
+        result_user_detail_original:
+          description: "4"
+          example: "4"
+          type: string
+        result_user_id:
+          description: "1"
+          example: "1"
+          type: string
+        result_user_id_openid:
+          description: "1"
+          example: 074a1CcTG1LelxKe4xQC0zgNdId0nxi95b5lsNpazWYoCo5
+          type: string
+        result_user_id_original:
+          description: "1"
+          example: "2"
+          type: string
+      required:
+      - result_test
+      - result_test_original
+      type: object
+    AlipayOpenOperationOpenbizmockRzoneQueryErrorResponseModel:
+      properties:
+        code:
+          description: 错误码
+          enum:
+          - CESHI
+          type: string
+        links:
+          description: 解决方案链接
+          type: string
+        message:
+          description: 错误描述
+          type: string
+      required:
+      - code
+      - message
+      type: object
+    AlipayOpenOperationOpenbizmockRzoneQueryResponseModel:
+      example:
+        result: sucesee
+        result_openid: xxxxxscddcd
+        zone_name: "{\"name\":\"test_id\",\"buyer_id\":\"2088003194644606\",\"bbb\"\
+          :{\"seller_id\":\"2088003194644670\",\"name\":\"zhenchen\"},\"ccc\":\"{\\\
+          \"name\\\": \\\"maise\\\", \\\"cid\\\": \\\"2088003194644699\\\"}\"}"
+        zone_openid: "{}"
+      properties:
+        result:
+          description: 测试
+          example: sucesee
+          type: string
+        result_openid:
+          description: 测试
+          example: xxxxxscddcd
+          type: string
+        zone_name:
+          description: RZ00B
+          example: "{\"name\":\"test_id\",\"buyer_id\":\"2088003194644606\",\"bbb\"\
+            :{\"seller_id\":\"2088003194644670\",\"name\":\"zhenchen\"},\"ccc\":\"\
+            {\\\"name\\\": \\\"maise\\\", \\\"cid\\\": \\\"2088003194644699\\\"}\"\
+            }"
+          type: string
+        zone_openid:
+          description: RZ00B
+          example: "{}"
+          type: string
+      required:
+      - result
+      - result_openid
+      - zone_name
+      - zone_openid
+      type: object
+    AlipayOpenOperationOpenbizmockRzonegroovyQueryErrorResponseModel:
+      properties:
+        code:
+          description: 错误码
+          enum:
+          - UNKNOW_ERROR
+          type: string
+        links:
+          description: 解决方案链接
+          type: string
+        message:
+          description: 错误描述
+          type: string
+      required:
+      - code
+      - message
+      type: object
+    AlipayOpenOperationOpenbizmockRzonegroovyQueryModel:
+      example:
+        uid: "2088502410932130"
+        agreement_params:
+          deduct_permission: "2021571176714791277815457854545"
+          agreement_no: "20170322450983769228"
+          apply_token: MDEDUCT0068292ca377d1d44b65fa24ec9cd89132f
+          auth_confirm_no: "423979"
+      properties:
+        agreement_params:
+          $ref: '#/components/schemas/AgreementParams'
+        uid:
+          description: 测试
+          example: "2088502410932130"
+          type: string
+      type: object
+    AlipayOpenOperationOpenbizmockRzonegroovyQueryResponseModel:
+      example:
+        result: rzone
+      properties:
+        result:
+          description: 测试
+          example: rzone
+          type: string
+      required:
+      - result
+      type: object
+    AlipayOpenOperationOpenbizmockTestcertificateQueryErrorResponseModel:
+      properties:
+        code:
+          description: 错误码
+          enum:
+          - LALALLALALALA
+          type: string
+        links:
+          description: 解决方案链接
+          type: string
+        message:
+          description: 错误描述
+          type: string
+      required:
+      - code
+      - message
+      type: object
+    AlipayOpenOperationOpenbizmockTestcertificateQueryResponseModel:
+      example:
+        result: succesee
+      properties:
+        result:
+          description: 测试
+          example: succesee
+          type: string
+      required:
+      - result
+      type: object
+    AlipayOpenOperationOpenbizmockTesterrorcodeQueryErrorResponseModel:
+      properties:
+        code:
+          description: 错误码
+          enum:
+          - ILLEGAL_PARAM
+          type: string
+        links:
+          description: 解决方案链接
+          type: string
+        message:
+          description: 错误描述
+          type: string
+      required:
+      - code
+      - message
+      type: object
+    AlipayOpenOperationOpenbizmockTesterrorcodeQueryResponseModel:
+      example:
+        result: sucesee
+      properties:
+        result:
+          description: sucesee
+          example: sucesee
+          type: string
+      required:
+      - result
+      type: object
+    AlipayOpenOperationOpenbizmockTestpathkeyQueryErrorResponseModel:
+      properties:
+        code:
+          description: 错误码
+          enum:
+          - LALALA
+          type: string
+        links:
+          description: 解决方案链接
+          type: string
+        message:
+          description: 错误描述
+          type: string
+      required:
+      - code
+      - message
+      type: object
+    AlipayOpenOperationOpenbizmockTestpathkeyQueryModel:
+      example:
+        d: d
+      properties:
+        d:
+          description: "4"
+          example: d
+          type: string
+      type: object
+    AlipayOpenOperationOpenbizmockTestpathkeyQueryResponseModel:
+      example:
+        result: success
+      properties:
+        result:
+          description: 测试
+          example: success
+          type: string
+      type: object
+    CommonErrorType:
+      properties:
+        code:
+          description: 错误码
+          enum:
+          - invalid-parameter
+          - upload-fail
+          - invalid-file-extension
+          - invalid-file-size
+          - file-check-fail
+          - app-call-limited
+          - method-call-limited
+          - insufficient-isv-permissions
+          - illegal-client-ip
+          - insufficient-user-permissions
+          - self-invoke-forbidden
+          - app-auth-invoke-limit
+          - app-api-punished
+          - missing-method
+          - missing-platform
+          - invalid-platform
+          - invalid-method
+          - forbidden-api
+          - invalid-format
+          - missing-signature
+          - missing-app-access-token
+          - missing-signature-type
+          - missing-default-signature-type
+          - missing-signature-key
+          - invalid-signature-type
+          - invalid-signature-type-said-interface
+          - invalid-signature
+          - unsupported-expired-app-key-sign
+          - "app-key-security-risk, app-cert-expired"
+          - app-cert-not-exist
+          - alipay-cert-not-exist
+          - missing-app-cert-sn
+          - missing-alipay-cert-sn
+          - missing-alipay-root-cert-sn
+          - invalid-alipay-root-cert-sn
+          - invalid-request-data
+          - invalid-response-data
+          - missing-encrypt-type
+          - missing-encrypt-key
+          - invalid-encrypt-type
+          - invalid-encrypt
+          - missing-session
+          - missing-app-id
+          - invalid-app-id
+          - missing-timestamp
+          - invalid-timestamp
+          - illegal-timestamp
+          - missing-version
+          - invalid-version
+          - unsupported-version
+          - invalid-encoding
+          - invalid-charset
+          - invalid-digest-type
+          - invalid-digest
+          - invalid-app-state
+          - invalid-subscribe-relations
+          - invalid-auth-token
+          - auth-token-time-out
+          - invalid-app-auth-token
+          - invalid-app-auth-token-no-api
+          - app-auth-token-time-out
+          - not-support-app-auth
+          - access-data-time-out
+          - unsupport-operation
+          - openid-error
+          - unknow-error
+          - invalid-app-method
+          - missing-app-uid
+          - illegal-json
+          - illegal-card-no
+          - invalid-partnerid
+          - no-product-reg-by-partner
+          - decryption-error
+          - decryption-error-missing-encrypt-type
+          - decryption-error-not-valid-encrypt-type
+          - decryption-error-not-valid-encrypt-key
+          - decryption-error-unknown
+          - missing-signature-config
+          - sevice-not-been-subscribed-to
+          - unknown-sub-code
+          - suspected-attack
+          - invalid-auth-relations
+          - invalid-product
+          - method-forbidden-batch-invoke
+          - exist-blank-sub-request-id
+          - exist-repeated-sub-request-id
+          - invalid-app-auth-relations
+          - app-unbind-partner
+          - app-invalid-oid
+          - exceed-api-balance
+          - inner-app-no-access
+          - invalid-inner-invoke-scene
+          - invalid-app-api-field-config
+          type: string
+        links:
+          description: 解决方案链接
+          type: string
+        message:
+          description: 错误描述
+          type: string
+      required:
+      - code
+      - message
+      type: object
+    FileUploadExtraParam:
+      properties:
+        extern_upload:
+          description: 是否同步上传到其他平台。素材类型为视频且需要同步优酷，请必传入参数youku，素材接口将代上传到优酷账号；素材类型为图片，无需传入参数
+          example: youku
+          type: string
+        file_encrypt_type:
+          description: 文件加密类型，可选值：NO_ENCRYPT（不加密），CLIENT_DECRYPT（afts服务器加密，客户端解密），AFTS_SERVER（afts服务器端自动加解密），OSS_DECRYPT（使用oss存储加解密），AFTS_SERVER_STANDRAD（afts服务器自动加解密标准版，与AFTS_SERVER的差别在于秘钥使用方式不同）
+          example: NO_ENCRYPT
+          type: string
+      type: object
+    AlipayOpenFileUploadErrorResponseModel:
+      properties:
+        code:
+          description: 错误码
+          enum:
+          - FILE_CHECK_FAIL
+          - BIZ_ERROR
+          type: string
+        links:
+          description: 解决方案链接
+          type: string
+        message:
+          description: 错误描述
+          type: string
+      required:
+      - code
+      - message
+      type: object
+    AlipayOpenFileUploadModel:
+      properties:
+        biz_code:
+          description: 素材使用场景，请关联其他开放平台接口联合使用。如果素材用于内容发布，请必传入content_creation
+          example: content_creation
+          type: string
+        extra_parameters:
+          $ref: '#/components/schemas/FileUploadExtraParam'
+        md5:
+          description: 文件的md5值，如果不传则不校验md5
+          example: 9cff2d79bc81acf12abbaca7328a4dc5
+          type: string
+      required:
+      - biz_code
+      type: object
+    AlipayOpenFileUploadResponseModel:
+      example:
+        file_id: A*6XqwQKpS1t0AAAAAAAAAAAAADi92AA
+      properties:
+        file_id:
+          description: 文件id，用于提供后后续业务调用使用
+          example: A*6XqwQKpS1t0AAAAAAAAAAAAADi92AA
+          type: string
+      required:
+      - file_id
+      type: object
+    OpenidComplex:
+      example:
+        uid: "2088502241306951"
+        uid_list: "[\"2088502241306951\"]"
+        openid: 074a1CcTG1LelxKe4xQC0zgNdId0nxi95b5lsNpazWYoCo5
+        json_string: "{}"
+        open_id_list: "[\"074a1CcTG1LelxKe4xQC0zgNdId0nxi95b5lsNpazWYoCo5\"]"
+      properties:
+        json_string:
+          description: "11"
+          example: "{}"
+          type: string
+        open_id_list:
+          description: "1"
+          example: "[\"074a1CcTG1LelxKe4xQC0zgNdId0nxi95b5lsNpazWYoCo5\"]"
+          items:
+            type: string
+          type: array
+        openid:
+          description: "11"
+          example: 074a1CcTG1LelxKe4xQC0zgNdId0nxi95b5lsNpazWYoCo5
+          type: string
+        uid:
+          description: "11"
+          example: "2088502241306951"
+          type: string
+        uid_list:
+          description: "1"
+          example: "[\"2088502241306951\"]"
+          items:
+            type: string
+          type: array
+      type: object
+    UserDetail:
+      example:
+        amount: 0.8008281904610115
+        address: address
+        price: price
+        mobile: mobile
+        name: name
+        is_master_user: true
+        gmt_sign_up: gmt_sign_up
+      properties:
+        address:
+          description: 地址
+          type: string
+        amount:
+          description: 数量
+          type: number
+        gmt_sign_up:
+          description: 注册时间
+          type: string
+        is_master_user:
+          description: 大师级用户
+          type: boolean
+        mobile:
+          description: 手机号
+          type: string
+        name:
+          description: 用户名称
+          type: string
+        price:
+          description: 单价
+          type: string
+      type: object
+    alipay_open_file_upload_request:
+      properties:
+        data:
+          $ref: '#/components/schemas/AlipayOpenFileUploadModel'
+        file_content:
+          format: binary
+          type: string
+      type: object
+    alipay_open_file_upload_default_response:
+      anyOf:
+      - $ref: '#/components/schemas/CommonErrorType'
+      - $ref: '#/components/schemas/AlipayOpenFileUploadErrorResponseModel'
+    alipay_open_operation_openbizmock_closelyrzone_query_default_response:
+      oneOf:
+      - $ref: '#/components/schemas/CommonErrorType'
+      - $ref: '#/components/schemas/AlipayOpenOperationOpenbizmockCloselyrzoneQueryErrorResponseModel'
+    alipay_open_operation_openbizmock_encrydata_query_default_response:
+      oneOf:
+      - $ref: '#/components/schemas/CommonErrorType'
+      - $ref: '#/components/schemas/AlipayOpenOperationOpenbizmockEncrydataQueryErrorResponseModel'
+    alipay_open_operation_openbizmock_gzone_query_default_response:
+      oneOf:
+      - $ref: '#/components/schemas/CommonErrorType'
+      - $ref: '#/components/schemas/AlipayOpenOperationOpenbizmockGzoneQueryErrorResponseModel'
+    alipay_open_operation_openbizmock_openidtesting_query_default_response:
+      oneOf:
+      - $ref: '#/components/schemas/CommonErrorType'
+      - $ref: '#/components/schemas/AlipayOpenOperationOpenbizmockOpenidtestingQueryErrorResponseModel'
+    alipay_open_operation_openbizmock_rzone_query_default_response:
+      oneOf:
+      - $ref: '#/components/schemas/CommonErrorType'
+      - $ref: '#/components/schemas/AlipayOpenOperationOpenbizmockRzoneQueryErrorResponseModel'
+    alipay_open_operation_openbizmock_rzonegroovy_query_default_response:
+      oneOf:
+      - $ref: '#/components/schemas/CommonErrorType'
+      - $ref: '#/components/schemas/AlipayOpenOperationOpenbizmockRzonegroovyQueryErrorResponseModel'
+    alipay_open_operation_openbizmock_testcertificate_query_default_response:
+      oneOf:
+      - $ref: '#/components/schemas/CommonErrorType'
+      - $ref: '#/components/schemas/AlipayOpenOperationOpenbizmockTestcertificateQueryErrorResponseModel'
+    alipay_open_operation_openbizmock_testerrorcode_query_default_response:
+      oneOf:
+      - $ref: '#/components/schemas/CommonErrorType'
+      - $ref: '#/components/schemas/AlipayOpenOperationOpenbizmockTesterrorcodeQueryErrorResponseModel'
+    alipay_open_operation_openbizmock_testpathkey_query_default_response:
+      oneOf:
+      - $ref: '#/components/schemas/CommonErrorType'
+      - $ref: '#/components/schemas/AlipayOpenOperationOpenbizmockTestpathkeyQueryErrorResponseModel'
+
